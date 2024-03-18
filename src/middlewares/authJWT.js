@@ -28,30 +28,20 @@ const verifyToken = (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  await supabase
+  const { data: user, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", req.userId)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
-      if (user.role === 2) {
-        next();
-        return;
-      }
-      return res.status(403).send({ message: "Require Admin Role!" });
-    });
-  // User.findByPk(req.userId).then((user) => {
-  //   if (!user) {
-  //     return res.status(404).send({ message: "User Not found." });
-  //   }
-  //   if (user.role === 2) {
-  //     next();
-  //     return;
-  //   }
-  //   return res.status(403).send({ message: "Require Admin Role!" });
-  // });
+    .single();
+
+  if (error || !user) {
+    return res.status(404).send({ message: "User Not found." });
+  }
+  if (user.role === 2) {
+    next();
+    return;
+  }
+  return res.status(403).send({ message: "Require Admin Role!" });
 };
 
 const authJWT = {
