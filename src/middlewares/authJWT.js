@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { TokenExpiredError } = jwt;
-const supabase = require("../config/supabase");
+const supabase = require("../utils/supabase");
 
 const catchError = (err, res) => {
   if (err instanceof TokenExpiredError) {
