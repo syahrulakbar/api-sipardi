@@ -7,17 +7,7 @@ module.exports = (app) => {
   });
   app.get("/api/blog", blogController.getAllBlog);
   app.get("/api/blog/:id", blogController.getBlogById);
-  app.post(
-    "/api/blog",
-    [authJWT.verifyToken, authJWT.isAdmin],
-    upload.single("image"),
-    blogController.createBlog,
-  );
-  app.patch(
-    "/api/blog/:id",
-    [authJWT.verifyToken, authJWT.isAdmin],
-    upload.single("image"),
-    blogController.updateBlog,
-  );
+  app.post("/api/blog", [authJWT.verifyToken, authJWT.isAdmin], blogController.createBlog);
+  app.patch("/api/blog/:id", [authJWT.verifyToken, authJWT.isAdmin], blogController.updateBlog);
   app.delete("/api/blog/:id", [authJWT.verifyToken, authJWT.isAdmin], blogController.deleteBlog);
 };

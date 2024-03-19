@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const multer = require("multer");
+// const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
@@ -9,7 +9,7 @@ const app = express();
 
 // const corsPORT = process.env.CORS_PORT || 3000;
 const corsOPTIONS = {
-  origin: "https://sipardi.vercel.app",
+  origin: ["https://sipardi.vercel.app", "http://localhost:3000"],
   credentials: true,
 };
 
@@ -18,24 +18,24 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/assets", express.static("images"));
+// app.use("/assets", express.static("images"));
 
 require("./src/routes/index.js")(app);
 app.get("/", (req, res) => {
   res.send("SiPardi API");
 });
 
-app.use((error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    return res.status(413).json({
-      message: "Image too large",
-    });
-  }
+// app.use((error, req, res, next) => {
+//   if (error instanceof multer.MulterError) {
+//     return res.status(413).json({
+//       message: "Image too large",
+//     });
+//   }
 
-  return res.status(500).json({
-    message: error?.message || "Internal Server Error",
-  });
-});
+//   return res.status(500).json({
+//     message: error?.message || "Internal Server Error",
+//   });
+// });
 
 // const startServer = async () => {
 //   try {

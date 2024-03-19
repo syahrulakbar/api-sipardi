@@ -1,23 +1,23 @@
 // const db = require("../models");
 // const Blog = db.blog;
-const { removeImage } = require("../utils/imageUtils");
+// const { removeImage } = require("../utils/imageUtils");
 // const { Op } = require("sequelize");
 const supabase = require("../utils/supabase");
 
 exports.createBlog = async (req, res) => {
   const author = req.userId;
-  const image = req.file?.filename;
-  if (req.fileValidationError) {
-    return res.status(400).send({
-      message: req.fileValidationError,
-    });
-  }
+  // const image = req.file?.filename;
+  // if (req.fileValidationError) {
+  //   return res.status(400).send({
+  //     message: req.fileValidationError,
+  //   });
+  // }
 
   try {
     // const response = await Blog.create({ ...req.body, image, author });
     const { data: response, error } = await supabase
       .from("blogs")
-      .insert([{ ...req.body, image, author }])
+      .insert([{ ...req.body, author }])
       .select();
     if (error) {
       throw new Error(error.message);
@@ -28,7 +28,7 @@ exports.createBlog = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    removeImage(image);
+    // removeImage(image);
     res.status(500).send({ message: "Error while creating blog" });
   }
 };
@@ -92,7 +92,7 @@ exports.deleteBlog = async (req, res) => {
         message: "Blog not found",
       });
     }
-    if (blog.image) removeImage(blog.image);
+    // if (blog.image) removeImage(blog.image);
     // await blog.destroy({ where: { id } });
     await supabase.from("blogs").delete().eq("id", id);
 
@@ -107,7 +107,7 @@ exports.deleteBlog = async (req, res) => {
 
 exports.updateBlog = async (req, res) => {
   const id = req.params.id;
-  const image = req.file?.filename;
+  // const image = req.file?.filename;
   try {
     // const blog = await Blog.findByPk(id);
     const { data: blog, error } = await supabase.from("blogs").select("*").eq("id", id).single();
@@ -117,13 +117,13 @@ exports.updateBlog = async (req, res) => {
         message: "Blog not found",
       });
     }
-    if (image) {
-      removeImage(blog.image);
-    }
+    // if (image) {
+    //   removeImage(blog.image);
+    // }
     // const response = await blog.update({ ...req.body, image }, { where: { id } });
     const { data: response, error: errorUpdate } = await supabase
       .from("blogs")
-      .update([{ ...req.body, image }])
+      .update(req.body)
       .eq("id", id)
       .select();
 
@@ -136,7 +136,7 @@ exports.updateBlog = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    removeImage(image);
+    // removeImage(image);
 
     res.status(500).send({ message: "Error while update blog" });
   }

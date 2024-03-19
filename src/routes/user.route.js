@@ -12,12 +12,7 @@ module.exports = (app) => {
   app.get("/api/users/profile", [authJWT.verifyToken], userController.currentUser);
   app.get("/api/users", [authJWT.verifyToken, authJWT.isAdmin], userController.getAllUsers);
   app.get("/api/users/:id", [authJWT.verifyToken], userController.getUserById);
-  app.patch(
-    "/api/users/:id",
-    [authJWT.verifyToken],
-    upload.single("profilePicture"),
-    userController.updateUserById,
-  );
+  app.patch("/api/users/:id", [authJWT.verifyToken], userController.updateUserById);
   app.delete(
     "/api/users/:id",
     [authJWT.verifyToken, authJWT.isAdmin],

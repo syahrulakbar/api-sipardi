@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 // const db = require("../models");
 // const { user: User } = db;
 // const { Op } = require("sequelize");
-const { removeImage } = require("../utils/imageUtils.js");
+// const { removeImage } = require("../utils/imageUtils.js");
 const supabase = require("../utils/supabase.js");
 
 exports.signUp = async (req, res) => {
@@ -201,6 +201,7 @@ exports.signOut = async (req, res) => {
 
 exports.refreshToken = async (req, res) => {
   try {
+    const refreshToken = req.cookies?.refreshToken;
     // const user = await User.findOne({
     //   where: {
     //     refresh_token: refreshToken,
@@ -372,12 +373,12 @@ exports.updateUserById = async (req, res) => {
   }
   try {
     const id = req.params.id;
-    const profilePicture = req.file?.filename;
-    if (req.fileValidationError) {
-      return res.status(400).json({
-        message: req.fileValidationError,
-      });
-    }
+    // const profilePicture = req.file?.filename;
+    // if (req.fileValidationError) {
+    //   return res.status(400).json({
+    //     message: req.fileValidationError,
+    //   });
+    // }
 
     // const user = await User.findByPk(id);
     const { data: user, error } = await supabase.from("users").select("*").eq("id", id).single();
@@ -387,11 +388,11 @@ exports.updateUserById = async (req, res) => {
         message: "User not found",
       });
     } else if (user) {
-      if (profilePicture) {
-        if (user.profilePicture) {
-          removeImage(user.profilePicture);
-        }
-      }
+      // if (profilePicture) {
+      //   if (user.profilePicture) {
+      //     removeImage(user.profilePicture);
+      //   }
+      // }
 
       const { name, email } = req.body;
 
@@ -408,10 +409,7 @@ exports.updateUserById = async (req, res) => {
       //   },
       // );
 
-      await supabase
-        .from("users")
-        .update({ ...req.body, profilePicture })
-        .eq("id", id);
+      await supabase.from("users").update(req.body).eq("id", id);
 
       res.cookie("name", name, {
         httpOnly: false,
@@ -445,9 +443,9 @@ exports.deleteUserById = async (req, res) => {
     const { data: user, error } = await supabase.from("users").select("*").eq("id", id).single();
 
     if (user) {
-      if (user.profilePicture) {
-        removeImage(user.profilePicture);
-      }
+      // if (user.profilePicture) {
+      //   removeImage(user.profilePicture);
+      // }
       // await user.destroy({
       //   where: {
       //     id,
