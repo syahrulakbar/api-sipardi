@@ -1,13 +1,7 @@
-// const db = require("../models");
-// const Rule = db.rule;
-// const Penyakit = db.penyakit;
-// const Gejala = db.gejala;
-// const Konsultasi = db.konsultasi;
 const supabase = require("../utils/supabase");
 
 exports.createKonsultasi = async (req, res) => {
   try {
-    // const response = await Konsultasi.create(req.body);
     const { data: response, error } = await supabase
       .from("konsultasis")
       .insert([req.body])
@@ -27,19 +21,6 @@ exports.createKonsultasi = async (req, res) => {
 
 exports.getAllKonsultasi = async (req, res) => {
   try {
-    // const response = await Konsultasi.findAll({
-    //   where: {
-    //     user_id: req.userId,
-    //   },
-    //   include: [
-    //     {
-    //       model: Rule,
-    //       include: [Penyakit, Gejala],
-    //     },
-    //   ],
-    //   order: [["createdAt", "DESC"]],
-    // });
-
     const { data: response, error } = await supabase
       .from("konsultasis")
       .select(
@@ -65,7 +46,6 @@ exports.getAllKonsultasi = async (req, res) => {
 exports.getKonsultasiById = async (req, res) => {
   const id = req.params.id;
   try {
-    // const konsultasi = await Konsultasi.findByPk(id);
     const { data: konsultasi, error } = await supabase
       .from("konsultasis")
       .select("*")
@@ -95,7 +75,6 @@ exports.getKonsultasiById = async (req, res) => {
 exports.deleteKonsultasi = async (req, res) => {
   const id = req.params.id;
   try {
-    // const konsultasi = await Konsultasi.findByPk(id);
     const { data: konsultasi, error } = await supabase
       .from("konsultasis")
       .select("*")
@@ -105,7 +84,6 @@ exports.deleteKonsultasi = async (req, res) => {
       throw new Error(error.message);
     }
     if (konsultasi) {
-      // await konsultasi.destroy({ where: { id } });
       await supabase.from("konsultasis").delete().eq("id", id);
       return res.status(200).json({
         message: "Delete data konsultasi successfully",
@@ -126,7 +104,6 @@ exports.deleteKonsultasi = async (req, res) => {
 exports.updateKonsultasi = async (req, res) => {
   const id = req.params.id;
   try {
-    // const konsultasi = await Konsultasi.findByPk(id);
     const { data: konsultasi, error } = await supabase
       .from("konsultasis")
       .select("*")
@@ -136,7 +113,6 @@ exports.updateKonsultasi = async (req, res) => {
       throw new Error(error.message);
     }
     if (konsultasi) {
-      // const response = await konsultasi.update(req.body, { where: { id } });
       const { data: response, error } = await supabase
         .from("konsultasis")
         .update(req.body)

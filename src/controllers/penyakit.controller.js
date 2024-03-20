@@ -1,11 +1,7 @@
-// const db = require("../models");
-// const Penyakit = db.penyakit;
-// const { Op } = require("sequelize");
 const supabase = require("../utils/supabase");
 
 exports.createPenyakit = async (req, res) => {
   try {
-    // const response = await Penyakit.create(req.body);
     const { data: response, error } = await supabase.from("penyakits").insert([req.body]).select();
     if (error) {
       return res
@@ -25,15 +21,6 @@ exports.createPenyakit = async (req, res) => {
 exports.getAllPenyakit = async (req, res) => {
   try {
     const keyword = req.query.keyword || "";
-    // const response = await Penyakit.findAll({
-    //   where: {
-    //     nama_penyakit: {
-    //       [Op.iLike]: `%${keyword}%`,
-    //     },
-    //   },
-    //   order: [["id", "ASC"]],
-    // });
-
     const { data: response, error } = await supabase
       .from("penyakits")
       .select()
@@ -56,8 +43,6 @@ exports.getAllPenyakit = async (req, res) => {
 exports.getPenyakitById = async (req, res) => {
   const id = req.params.id;
   try {
-    // const penyakit = await Penyakit.findByPk(id);
-
     const { data: penyakit, error } = await supabase
       .from("penyakits")
       .select()
@@ -87,7 +72,6 @@ exports.getPenyakitById = async (req, res) => {
 exports.deletePenyakit = async (req, res) => {
   const id = req.params.id;
   try {
-    // const penyakit = await Penyakit.findByPk(id);
     const { data: penyakit, error } = await supabase
       .from("penyakits")
       .select()
@@ -97,7 +81,6 @@ exports.deletePenyakit = async (req, res) => {
       return res.status(404).json({ message: "Penyakit not found" });
     }
     if (penyakit) {
-      // await penyakit.destroy({ where: { id } });
       await supabase.from("penyakits").delete().eq("id", id);
       return res.status(200).json({
         message: "Delete data penyakit successfully",
@@ -116,7 +99,6 @@ exports.deletePenyakit = async (req, res) => {
 exports.updatePenyakit = async (req, res) => {
   const id = req.params.id;
   try {
-    // const penyakit = await Penyakit.findByPk(id);
     const { data: penyakit, error } = await supabase
       .from("penyakits")
       .select()
@@ -130,7 +112,6 @@ exports.updatePenyakit = async (req, res) => {
       .update(req.body)
       .eq("id", id)
       .select();
-    // const response = await penyakit.update(req.body, { where: { id } });
     if (errorData) {
       return res
         .status(500)

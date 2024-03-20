@@ -1,5 +1,5 @@
 const { blogController } = require("../controllers");
-const { authJWT, upload } = require("../middlewares");
+const { authJWT } = require("../middlewares");
 
 module.exports = (app) => {
   app.use((req, res, next) => {

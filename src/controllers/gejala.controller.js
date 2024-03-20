@@ -1,11 +1,7 @@
-// const db = require("../models");
-// const Gejala = db.gejala;
-// const { Op } = require("sequelize");
 const supabase = require("../utils/supabase");
 
 exports.createGejala = async (req, res) => {
   try {
-    // const response = await Gejala.create(req.body);
     const { data: response, error } = await supabase.from("gejalas").insert([req.body]).select();
     if (error) {
       throw new Error(error.message);
@@ -22,11 +18,6 @@ exports.createGejala = async (req, res) => {
 
 exports.dispepsia = async (req, res) => {
   try {
-    // const response = await Gejala.findOne({
-    //   where: {
-    //     mulai: true,
-    //   },
-    // });
     const { data: response, error } = await supabase
       .from("gejalas")
       .select("*")
@@ -47,15 +38,6 @@ exports.dispepsia = async (req, res) => {
 exports.getAllGejala = async (req, res) => {
   try {
     const keyword = req.query.keyword || "";
-    // const response = await Gejala.findAll({
-    //   where: {
-    //     nama_gejala: {
-    //       [Op.iLike]: `%${keyword}%`,
-    //     },
-    //   },
-    //   order: [["id", "ASC"]],
-    // });
-
     const { data: response, error } = await supabase
       .from("gejalas")
       .select("*")
@@ -78,7 +60,6 @@ exports.getAllGejala = async (req, res) => {
 exports.getGejalaById = async (req, res) => {
   const id = req.params.id;
   try {
-    // const gejala = await Gejala.findByPk(id);
     const { data: gejala, error } = await supabase
       .from("gejalas")
       .select("*")
@@ -106,7 +87,6 @@ exports.getGejalaById = async (req, res) => {
 exports.deleteGejala = async (req, res) => {
   const id = req.params.id;
   try {
-    // const gejala = await Gejala.findByPk(id);
     const { data: gejala, error } = await supabase
       .from("gejalas")
       .select("*")
@@ -116,7 +96,6 @@ exports.deleteGejala = async (req, res) => {
       throw new Error(error.message);
     }
     if (gejala) {
-      // await gejala.destroy({ where: { id } });
       await supabase.from("gejalas").delete().eq("id", id);
       return res.status(200).json({
         message: "Delete data gejala successfully",
@@ -135,7 +114,6 @@ exports.deleteGejala = async (req, res) => {
 exports.updateGejala = async (req, res) => {
   const id = req.params.id;
   try {
-    // const gejala = await Gejala.findByPk(id);
     const { data: gejala, error } = await supabase
       .from("gejalas")
       .select("*")
@@ -145,7 +123,6 @@ exports.updateGejala = async (req, res) => {
       throw new Error(error.message);
     }
     if (gejala) {
-      // const response = await gejala.update(req.body, { where: { id } });
       const { data: response, error } = await supabase
         .from("gejalas")
         .update(req.body)
