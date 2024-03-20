@@ -87,19 +87,27 @@ exports.signIn = async (req, res) => {
     res.cookie("expire", exp, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "None",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "None",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "None",
     });
 
     res.cookie("userId", id, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "None",
     });
     return res.status(200).json({
       message: "Successfully logged in",
@@ -153,6 +161,7 @@ exports.signOut = async (req, res) => {
 exports.refreshToken = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
+    console.log(refreshToken);
     const { data: user, error } = await supabase
       .from("users")
       .select("*")
@@ -181,15 +190,21 @@ exports.refreshToken = async (req, res) => {
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15 minutes
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "None",
       });
       res.cookie("expire", exp, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "None",
       });
 
       res.cookie("userId", id, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "None",
       });
 
       return res.status(200).json({
@@ -308,23 +323,19 @@ exports.updateUserById = async (req, res) => {
         delete req.body.email;
       }
 
-      const { data: userUpdate, error: errorUpdate } = await supabase
-        .from("users")
-        .update(req.body)
-        .eq("id", id)
-        .select();
-      if (errorUpdate) {
-        return res.status(500).json({
-          message: errorUpdate?.message || "Error when update profile",
-        });
-      }
+      await supabase.from("users").update(req.body).eq("id", id).select();
+
       res.cookie("name", name, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "None",
       });
       res.cookie("email", email, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "None",
       });
 
       return res.status(200).json({
