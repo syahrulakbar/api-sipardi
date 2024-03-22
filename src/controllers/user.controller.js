@@ -88,26 +88,22 @@ exports.signIn = async (req, res) => {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "None",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "None",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "None",
     });
 
     res.cookie("userId", id, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "None",
     });
     return res.status(200).json({
       message: "Successfully logged in",
@@ -191,20 +187,17 @@ exports.refreshToken = async (req, res) => {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15 minutes
         secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "None",
       });
       res.cookie("expire", exp, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "None",
       });
 
       res.cookie("userId", id, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "None",
       });
 
       return res.status(200).json({
@@ -284,18 +277,15 @@ exports.getUserById = async (req, res) => {
   try {
     const id = req.params.id;
     const { data: user, error } = await supabase.from("users").select("*").eq("id", id).single();
-
-    if (user) {
-      return res.status(200).json({
-        message: "Successfully get user by id",
-        data: user,
-      });
-    }
-    if (error) {
+    if (error || !user) {
       return res.status(404).json({
         message: "User not found",
       });
     }
+    return res.status(200).json({
+      message: "Successfully get user by id",
+      data: user,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -329,13 +319,11 @@ exports.updateUserById = async (req, res) => {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "None",
       });
       res.cookie("email", email, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "None",
       });
 
       return res.status(200).json({
