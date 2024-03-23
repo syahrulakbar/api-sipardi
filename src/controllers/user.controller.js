@@ -113,6 +113,10 @@ exports.signIn = async (req, res) => {
     });
     return res.status(200).json({
       message: "Successfully logged in",
+      env: {
+        isProd,
+        now: process.env.NODE_ENV,
+      },
     });
   } catch (error) {
     console.error(error);
