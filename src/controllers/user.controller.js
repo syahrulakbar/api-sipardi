@@ -90,13 +90,88 @@ exports.signIn = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
-      sameSite: "None",
+      sameSite: isProd ? "None" : "Lax",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
       secure: isProd,
-      sameSite: "None",
+      sameSite: isProd ? "None" : "Lax",
+    });
+
+    return res.status(200).json({
+      message: "Successfully logged in",
+      data: {
+        expire: exp,
+        userId: id,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: error?.message || "Error when signin user",
+    });
+  }
+};
+
+exports.adminSignIn = async (req, res) => {
+  try {
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", req.body.email)
+      .single();
+
+    if (error || !user) {
+      return res.status(404).json({
+        message: "Email Not Registered",
+      });
+    }
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      return res.status(400).json({
+        message: "Wrong Password",
+      });
+    }
+
+    if (user.role !== 2) {
+      return res.status(403).json({
+        message: "403 Forbidden",
+      });
+    }
+
+    const { id, name, email, role } = user;
+    const accessToken = jwt.sign({ id, name, email, role }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "15m",
+    });
+    const refreshToken = jwt.sign({ id, name, email, role }, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ refresh_token: refreshToken })
+      .eq("id", id);
+
+    if (updateError) {
+      return res.status(500).json({ message: "Error updating refresh token" });
+    }
+
+    const currentDate = new Date();
+    const exp = currentDate.getTime() + 15 * 60 * 1000;
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
+    });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 15 * 60 * 1000, // 15 minutes
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
     });
 
     return res.status(200).json({
@@ -182,7 +257,7 @@ exports.refreshToken = async (req, res) => {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15 minutes
         secure: isProd,
-        sameSite: "None",
+        sameSite: isProd ? "None" : "Lax",
       });
 
       return res.status(200).json({
@@ -264,7 +339,11 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    const { data: user, error } = await supabase.from("users").select("*").eq("id", id).single();
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("id,name,email,profilePicture,role")
+      .eq("id", id)
+      .single();
     if (error || !user) {
       return res.status(404).json({
         message: "User not found",
@@ -300,14 +379,27 @@ exports.updateUserById = async (req, res) => {
       if (email === user.email) {
         delete req.body.email;
       }
+      if (req.body.password === "") {
+        delete req.body.password;
+        delete req.body.confirmPassword;
+      }
 
-      await supabase.from("users").update(req.body).eq("id", id).select();
+      const { data: userUpdate, error } = await supabase
+        .from("users")
+        .update(req.body)
+        .eq("id", id)
+        .select("id, name, email, role, profilePicture");
+
+      if (error) {
+        return res.status(500).json({
+          message: error?.message || "Error when update profile",
+        });
+      }
 
       return res.status(200).json({
         message: "Successfully update profile",
         data: {
-          name,
-          email,
+          userUpdate,
         },
       });
     }
