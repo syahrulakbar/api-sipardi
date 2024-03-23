@@ -90,30 +90,30 @@ exports.signIn = async (req, res) => {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
-      sameSite: "Lax",
-      domain: ".vercel.app",
+      sameSite: "None",
+      domain: "sipardi.vercel.app",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
-      sameSite: "Lax",
-      domain: ".vercel.app",
+      sameSite: "None",
+      domain: "sipardi.vercel.app",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
       secure: isProd,
-      sameSite: "Lax",
-      domain: ".vercel.app",
+      sameSite: "None",
+      domain: "sipardi.vercel.app",
     });
 
     res.cookie("userId", id, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
-      sameSite: "Lax",
-      domain: ".vercel.app",
+      sameSite: "None",
+      domain: "sipardi.vercel.app",
     });
     return res.status(200).json({
       message: "Successfully logged in",
@@ -196,20 +196,23 @@ exports.refreshToken = async (req, res) => {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15 minutes
         secure: isProd,
-        sameSite: "Lax",
+        sameSite: "None",
+        domain: "sipardi.vercel.app",
       });
       res.cookie("expire", exp, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
-        sameSite: "Lax",
+        sameSite: "None",
+        domain: "sipardi.vercel.app",
       });
 
       res.cookie("userId", id, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
-        sameSite: "Lax",
+        sameSite: "None",
+        domain: "sipardi.vercel.app",
       });
 
       return res.status(200).json({
@@ -331,15 +334,15 @@ exports.updateUserById = async (req, res) => {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
-        sameSite: "Lax",
-        domain: ".vercel.app",
+        sameSite: "None",
+        domain: "sipardi.vercel.app",
       });
       res.cookie("email", email, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
-        sameSite: "Lax",
-        domain: ".vercel.app",
+        sameSite: "None",
+        domain: "sipardi.vercel.app",
       });
 
       return res.status(200).json({
