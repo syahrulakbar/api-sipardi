@@ -89,27 +89,27 @@ exports.signIn = async (req, res) => {
     res.cookie("expire", exp, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: isProd,
-      sameSite: isProd ? "None" : "Lax",
+      secure: true,
+      sameSite: "None",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: isProd,
-      sameSite: isProd ? "None" : "Lax",
+      secure: true,
+      sameSite: "None",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
-      secure: isProd,
-      sameSite: isProd ? "None" : "Lax",
+      secure: true,
+      sameSite: "None",
     });
 
     res.cookie("userId", id, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: isProd,
-      sameSite: isProd ? "None" : "Lax",
+      secure: true,
+      sameSite: "None",
     });
     return res.status(200).json({
       message: "Successfully logged in",
@@ -195,21 +195,21 @@ exports.refreshToken = async (req, res) => {
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         maxAge: 15 * 60 * 1000, // 15 minutes
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
+        secure: true,
+        sameSite: "None",
       });
       res.cookie("expire", exp, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
+        secure: true,
+        sameSite: "None",
       });
 
       res.cookie("userId", id, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
+        secure: true,
+        sameSite: "None",
       });
 
       return res.status(200).json({
@@ -330,14 +330,14 @@ exports.updateUserById = async (req, res) => {
       res.cookie("name", name, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
+        secure: true,
+        sameSite: "None",
       });
       res.cookie("email", email, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
+        secure: true,
+        sameSite: "None",
       });
 
       return res.status(200).json({
