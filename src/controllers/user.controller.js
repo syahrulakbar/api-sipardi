@@ -91,21 +91,21 @@ exports.signIn = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
       sameSite: "None",
-      domain: "sipardi.vercel.app",
+      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
       sameSite: "None",
-      domain: "sipardi.vercel.app",
+      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
       secure: isProd,
       sameSite: "None",
-      domain: "sipardi.vercel.app",
+      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
 
     res.cookie("userId", id, {
@@ -113,7 +113,7 @@ exports.signIn = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
       sameSite: "None",
-      domain: "sipardi.vercel.app",
+      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
     return res.status(200).json({
       message: "Successfully logged in",
@@ -197,14 +197,14 @@ exports.refreshToken = async (req, res) => {
         maxAge: 15 * 60 * 1000, // 15 minutes
         secure: isProd,
         sameSite: "None",
-        domain: "sipardi.vercel.app",
+        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
       res.cookie("expire", exp, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
         sameSite: "None",
-        domain: "sipardi.vercel.app",
+        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
 
       res.cookie("userId", id, {
@@ -212,7 +212,7 @@ exports.refreshToken = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
         sameSite: "None",
-        domain: "sipardi.vercel.app",
+        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
 
       return res.status(200).json({
@@ -335,14 +335,14 @@ exports.updateUserById = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
         sameSite: "None",
-        domain: "sipardi.vercel.app",
+        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
       res.cookie("email", email, {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         secure: isProd,
         sameSite: "None",
-        domain: "sipardi.vercel.app",
+        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
 
       return res.status(200).json({
