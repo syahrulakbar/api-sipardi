@@ -12,7 +12,6 @@ const corsOPTIONS = {
     "http://localhost:3000",
     "http://10.0.2.2:8081",
     "http://localhost:8081",
-    "https://www.syahrulakbar.tech/",
   ],
   credentials: true,
 };

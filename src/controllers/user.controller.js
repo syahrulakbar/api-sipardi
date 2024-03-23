@@ -86,37 +86,25 @@ exports.signIn = async (req, res) => {
     const currentDate = new Date();
     const exp = currentDate.getTime() + 15 * 60 * 1000;
 
-    res.cookie("expire", exp, {
-      httpOnly: false,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: isProd,
-      sameSite: "None",
-      domain: isProd ? "syahrulakbar.tech" : "localhost",
-    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: isProd,
       sameSite: "None",
-      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
       secure: isProd,
       sameSite: "None",
-      domain: isProd ? "syahrulakbar.tech" : "localhost",
     });
 
-    res.cookie("userId", id, {
-      httpOnly: false,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: isProd,
-      sameSite: "None",
-      domain: isProd ? "syahrulakbar.tech" : "localhost",
-    });
     return res.status(200).json({
       message: "Successfully logged in",
+      data: {
+        expire: exp,
+        userId: id,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -151,8 +139,6 @@ exports.signOut = async (req, res) => {
 
     res.clearCookie("refreshToken");
     res.clearCookie("accessToken");
-    res.clearCookie("userId");
-    res.clearCookie("expire");
     return res.status(200).json({
       message: "Successfully logged out",
     });
@@ -197,27 +183,14 @@ exports.refreshToken = async (req, res) => {
         maxAge: 15 * 60 * 1000, // 15 minutes
         secure: isProd,
         sameSite: "None",
-        domain: isProd ? "syahrulakbar.tech" : "localhost",
-      });
-      res.cookie("expire", exp, {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: "None",
-        domain: isProd ? "syahrulakbar.tech" : "localhost",
-      });
-
-      res.cookie("userId", id, {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: "None",
-        domain: isProd ? "syahrulakbar.tech" : "localhost",
       });
 
       return res.status(200).json({
         message: "Successfully new token",
-        exp,
+        data: {
+          expire: exp,
+          userId: id,
+        },
       });
     });
   } catch (error) {
@@ -330,23 +303,12 @@ exports.updateUserById = async (req, res) => {
 
       await supabase.from("users").update(req.body).eq("id", id).select();
 
-      res.cookie("name", name, {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: "None",
-        domain: isProd ? "syahrulakbar.tech" : "localhost",
-      });
-      res.cookie("email", email, {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: isProd,
-        sameSite: "None",
-        domain: isProd ? "syahrulakbar.tech" : "localhost",
-      });
-
       return res.status(200).json({
         message: "Successfully update profile",
+        data: {
+          name,
+          email,
+        },
       });
     }
   } catch (error) {
