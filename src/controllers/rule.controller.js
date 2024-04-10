@@ -1,5 +1,52 @@
 const supabase = require("../utils/supabase");
 
+exports.getAllData = async (req, res) => {
+  try {
+    // Mengambil data dari tabel users
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("role", "1");
+
+    if (userError) {
+      console.error("Error fetching users data:", userError.message);
+    }
+
+    // Mengambil data dari tabel gejala
+    const { data: gejalaData, error: gejalaError } = await supabase.from("gejalas").select("id");
+
+    if (gejalaError) {
+      console.error("Error fetching gejala data:", gejalaError.message);
+    }
+    const { data: penyakitData, error: penyakitError } = await supabase
+      .from("penyakits")
+      .select("id");
+
+    if (penyakitError) {
+      console.error("Error fetching gejala data:", gejalaError.message);
+    }
+
+    // Mengambil data dari tabel rules
+    const { data: rulesData, error: rulesError } = await supabase.from("rules").select("id");
+
+    if (rulesError) {
+      console.error("Error fetching rules data:", rulesError.message);
+    }
+    return res.status(200).json({
+      message: "Get all data rule successfully",
+      data: {
+        gejala: gejalaData.length,
+        rules: rulesData.length,
+        user: userData.length,
+        penyakit: penyakitData.length,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Error while get data rule" });
+  }
+};
+
 exports.createRule = async (req, res) => {
   try {
     const { penyakit_id, gejala_ids } = req.body;

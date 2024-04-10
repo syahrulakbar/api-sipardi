@@ -5,6 +5,7 @@ module.exports = (app) => {
   app.use((req, res, next) => {
     next();
   });
+  app.get("/api/sipardi", [authJWT.verifyToken, authJWT.isAdmin], ruleController.getAllData);
   app.get("/api/rule", ruleController.getAllRule);
   app.get("/api/rule/:id", ruleController.getRuleById);
   app.post("/api/rule", ruleController.createRule);
